@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+      Aggregator only: builds every chapter with "./mvnw verify".
+      Each chapter is a standalone Spring Boot project and can also be built from its own directory.
+    -->
+    <groupId>com.example</groupId>
+    <artifactId>spring-boot4-examples</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Spring Boot 4 in Java - Book Examples</name>
+
+    <modules>
+        <module>ch02-boot-internals</module>
+        <module>ch03-di-lifecycle</module>
+        <module>ch04-rest-api-design</module>
+        <module>ch05-validation-errors</module>
+        <module>ch06-files-streaming</module>
+        <module>ch07-spring-data-jpa</module>
+        <module>ch08-transactions</module>
+        <module>ch09-jdbc-jooq-nosql</module>
+        <module>ch10-security</module>
+        <module>ch11-jwt-oauth2</module>
+        <module>ch12-microservice-security</module>
+        <module>ch13-testing</module>
+        <module>ch14-code-quality</module>
+        <module>ch15-observability</module>
+        <module>ch17-microservices</module>
+        <module>ch18-cloud-function</module>
+        <module>ch19-webflux</module>
+        <module>ch20-caching-concurrency</module>
+        <module>ch21-performance-testing</module>
+        <module>ch22-deployment</module>
+        <module>ch23-native-image</module>
+        <module>ch24-production</module>
+        <module>ch25-migration</module>
+        <module>ch26-hexagonal</module>
+    </modules>
+</project>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.8</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.example</groupId>
+    <artifactId>ch14-code-quality</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Chapter 14 - Code Quality, Static Analysis, and Refactoring</name>
+
+    <properties>
+        <java.version>21</java.version>
+        <pmd.version>7.28.0</pmd.version>
+        <sonar.organization>your-organization-key</sonar.organization>
+        <sonar.host.url>http://localhost:9000</sonar.host.url> <!-- Or your SonarCloud URL -->
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Checkstyle: style/convention checks in the validate phase -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version> <!-- Use latest version -->
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation> <!-- Or your custom checkstyle.xml -->
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- SpotBugs: bytecode analysis for likely bugs -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.10.4.1</version> <!-- Use latest version -->
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <failOnError>true</failOnError>
+                    <includeFilterFile>spotbugs-security-include.xml</includeFilterFile> <!-- Optional: for security rules -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- PMD: source-level rules and copy/paste detection -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.28.0</version> <!-- Use latest version -->
+                <dependencies>
+                    <!-- Newer PMD engine: required to analyse code when Maven runs on JDK 25+ -->
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-core</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <rulesets>
+                        <ruleset>/rulesets/java/quickstart.xml</ruleset>
+                        <!-- PMD 7 replaced /rulesets/java/design.xml with the "design" category -->
+                        <ruleset>category/java/design.xml</ruleset>
+                        <!-- Add more rulesets or custom rules -->
+                    </rulesets>
+                    <!-- The "before" refactoring examples intentionally contain the smells PMD reports -->
+                    <excludes>
+                        <exclude>**/refactoring/before/*.java</exclude>
+                    </excludes>
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal> <!-- For Copy/Paste Detection -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- SonarQube / SonarCloud: run with  mvn clean verify sonar:sonar -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.8.0.7211</version> <!-- Use latest version -->
+            </plugin>
+        </plugins>
+    </build>
+</project>

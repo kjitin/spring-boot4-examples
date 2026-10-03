@@ -1,0 +1,3 @@
+# Served to the application named "product-service"
+product:
+  greeting: Hello from the Config Server

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-spring-native-app-deployment
+  labels:
+    app: my-spring-native-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-spring-native-app
+  template:
+    metadata:
+      labels:
+        app: my-spring-native-app
+    spec:
+      containers:
+        - name: my-spring-native-app
+          image: my-spring-native-app:0.0.1-SNAPSHOT # Your native Docker image
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "128Mi" # Significantly lower memory limit
+              cpu: "250m"
+            requests:
+              memory: "64Mi" # Significantly lower memory request
+              cpu: "100m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 5 # Faster startup, so lower delay
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5 # Faster startup, so lower delay
+            periodSeconds: 5

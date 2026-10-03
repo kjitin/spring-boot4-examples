@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--
+      The book includes base.xml, which already attaches a plain-text CONSOLE (and FILE) appender to the
+      root logger, so every line would be logged twice. defaults.xml only brings in Boot's conversion
+      rules and default properties.
+    -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Default: structured JSON logs (MDC values such as orderId/userId become JSON fields) -->
+    <springProfile name="!plain-logs">
+        <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="JSON_CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- Profile "plain-logs": human-readable pattern that still prints the MDC values -->
+    <springProfile name="plain-logs">
+        <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{${LOG_DATEFORMAT_PATTERN}}){faint} %clr(${LOG_LEVEL_PATTERN}) %clr(${PID}){magenta} %clr(---){faint} %clr([%t]){faint} %clr(%-40logger{39}){cyan} %clr(:){faint} %X{orderId} %X{userId} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <logger name="com.example" level="DEBUG"/>
+</configuration>

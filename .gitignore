@@ -1,0 +1,10 @@
+target/
+*.iml
+.idea/
+.vscode/
+.DS_Store
+uploads/
+downloads/
+*.log
+build/
+.gradle/

@@ -1,0 +1,37 @@
+# application.yml for Spring Cloud Gateway
+# Spring Cloud Gateway 5 (Spring Cloud 2025.1) moved route properties from
+# spring.cloud.gateway.routes to spring.cloud.gateway.server.webflux.routes
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: product_route
+              uri: lb://product-service
+              predicates:
+                - Path=/api/products/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    # KeyResolver bean name (e.g., '#userKeyResolver')
+                    key-resolver: '#{@userKeyResolver}'
+                    # Tokens added to the bucket per second (sustained requests per second)
+                    redis-rate-limiter.replenishRate: 10
+                    # Max burst size (bucket capacity)
+                    redis-rate-limiter.burstCapacity: 20
+                    # Tokens consumed by each request
+                    redis-rate-limiter.requestedTokens: 1
+    # Static service instances for lb://product-service (replace with Eureka/Consul in a real deployment)
+    discovery:
+      client:
+        simple:
+          instances:
+            product-service:
+              - uri: http://localhost:8081
+  data:
+    redis:
+      host: localhost
+      port: 6379

@@ -1,0 +1,2 @@
+com.example.myservice.autoconfigure.AnotherServiceAutoConfiguration
+com.example.myservice.autoconfigure.MyServiceAutoConfiguration

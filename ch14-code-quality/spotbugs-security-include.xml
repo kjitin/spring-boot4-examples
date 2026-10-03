@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Only report correctness, security and multithreading issues -->
+<FindBugsFilter>
+    <Match>
+        <Bug category="CORRECTNESS,SECURITY,MT_CORRECTNESS,MALICIOUS_CODE"/>
+    </Match>
+</FindBugsFilter>

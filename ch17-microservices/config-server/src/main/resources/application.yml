@@ -1,0 +1,23 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/your-org/config-repo.git # Your Git repository
+          search-paths: config-data # Optional: subdirectory within the repo
+          default-label: main # Default branch
+
+---
+# Run with --spring.profiles.active=native to serve the sample files in ./config-repo without a Git server
+spring:
+  config:
+    activate:
+      on-profile: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:./config-repo/config-data

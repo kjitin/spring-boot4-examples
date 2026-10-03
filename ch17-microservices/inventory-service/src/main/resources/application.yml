@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: inventory-service
+  cloud:
+    function:
+      definition: handleOrderEvent
+    stream:
+      function:
+        bindings:
+          handleOrderEvent-in-0: order-in
+      bindings:
+        order-in:
+          destination: order-events
+          group: inventory-service-group # Consumer group for Kafka
+          contentType: application/json

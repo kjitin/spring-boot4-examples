@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-spring-app-deployment
+  labels:
+    app: my-spring-app
+spec:
+  replicas: 3 # Run 3 instances of your application
+  selector:
+    matchLabels:
+      app: my-spring-app
+  template:
+    metadata:
+      labels:
+        app: my-spring-app
+    spec:
+      containers:
+        - name: my-spring-app
+          image: my-spring-app:latest # Your Docker image
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod # Example: activate 'prod' profile
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret # Reference a Kubernetes Secret
+                  key: url
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness # Spring Boot Actuator Liveness Probe
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness # Spring Boot Actuator Readiness Probe
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
